@@ -6,24 +6,19 @@ jobs:
   build:
     runs-on: ubuntu-22.04
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Ambil Kode
+        uses: actions/checkout@v4
 
-      - name: Install Dependencies
+      - name: Siapin Lingkungan
         run: |
           sudo apt update
-          sudo apt install -y python3-pip build-essential git python3-setuptools libffi-dev libssl-dev libltdl-dev
+          sudo apt install -y python3-pip build-essential git python3-setuptools libffi-dev libssl-dev libltdl-dev zip unzip openjdk-17-jdk
           pip3 install --user --upgrade buildozer cython==0.29.33
 
-      - name: Rakit APK VOID (Jalur Paksa)
+      - name: Bersihkan & Rakit
         run: |
           export PATH=$PATH:~/.local/bin
-          # Ini kunci biar nggak Exit 100: Terima semua lisensi otomatis
+          # Hapus sisa-sisa build gagal
+          buildozer android clean
+          # Rakit paksa
           yes | buildozer -v android debug
-        continue-on-error: false
-
-      - name: Upload APK
-        uses: actions/upload-artifact@65c4c4a1d33c74f3713ad3ed7e9014022a6f3ae0
-        with:
-          name: VOID-FINAL-APK
-          path: bin/*.apk
