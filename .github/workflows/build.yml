@@ -1,28 +1,29 @@
-name: Build VOID
+name: PAKSA TOTAL BUILD
 on:
   workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
 
       - name: Install Dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y python3-pip build-essential git python3-setuptools colorama libffi-dev setup-tools
-          pip3 install --user --upgrade buildozer
+          sudo apt update
+          sudo apt install -y python3-pip build-essential git python3-setuptools libffi-dev libssl-dev libltdl-dev
+          pip3 install --user --upgrade buildozer cython==0.29.33
 
-      - name: Build APK with Buildozer
+      - name: Rakit APK VOID (Jalur Paksa)
         run: |
           export PATH=$PATH:~/.local/bin
-          buildozer android debug
-        continue-on-error: true
+          # Ini kunci biar nggak Exit 100: Terima semua lisensi otomatis
+          yes | buildozer -v android debug
+        continue-on-error: false
 
-      - name: Upload Result
-        uses: actions/upload-artifact@v4
+      - name: Upload APK
+        uses: actions/upload-artifact@65c4c4a1d33c74f3713ad3ed7e9014022a6f3ae0
         with:
-          name: VOID-Blackout-Package
+          name: VOID-FINAL-APK
           path: bin/*.apk
