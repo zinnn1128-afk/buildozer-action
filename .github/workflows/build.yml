@@ -6,14 +6,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608
+      - uses: actions/checkout@v4
       - name: Build with Buildozer
-        uses: ArtemShatalin/buildozer-action@0e24ec9d93a525f0580971439794358896173041
+        uses: ArtemShatalin/buildozer-action@v1
         with:
           workdir: .
-          buildozer_version: master
       - name: Upload APK
-        uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32
+        uses: actions/upload-artifact@v4
         with:
           name: package
           path: bin/*.apk
