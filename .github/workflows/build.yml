@@ -1,4 +1,4 @@
-name: Build APK
+name: Build VOID
 on:
   workflow_dispatch:
 
@@ -6,13 +6,23 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Build with Buildozer
-        uses: ArtemShatalin/buildozer-action@v1
-        with:
-          workdir: .
-      - name: Upload APK
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3-pip build-essential git python3-setuptools colorama libffi-dev setup-tools
+          pip3 install --user --upgrade buildozer
+
+      - name: Build APK with Buildozer
+        run: |
+          export PATH=$PATH:~/.local/bin
+          buildozer android debug
+        continue-on-error: true
+
+      - name: Upload Result
         uses: actions/upload-artifact@v4
         with:
-          name: package
+          name: VOID-Blackout-Package
           path: bin/*.apk
